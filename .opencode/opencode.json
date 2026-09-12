@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "docx/AGENTS.md",
+    ".opencode/rules/receipt-processing.md",
+    ".opencode/rules/ui-design-tokens.md"
+  ],
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+  "permission": {
+    "bash": {
+      "*": "ask",
+      "npm run test*": "allow",
+      "npm run lint*": "allow",
+      "npm run typecheck*": "allow",
+      "npm run dev*": "allow",
+      "npm run worker*": "allow"
+    }
+  }
+}

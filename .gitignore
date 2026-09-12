@@ -1,0 +1,31 @@
+# dependencies
+/node_modules
+
+# next
+/.next
+/out
+
+# production
+/build
+
+# generated prisma client
+/generated
+
+# prisma
+prisma/*.db
+
+# local storage (uploaded receipts)
+/storage
+
+# env — never commit secrets (any environment file, at any depth)
+**/.env
+**/.env.*
+!**/.env.example
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts.bak

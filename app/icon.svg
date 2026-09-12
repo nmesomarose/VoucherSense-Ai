@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#31104b" />
+    </linearGradient>
+
+    <!-- Receipt Gradient -->
+    <linearGradient id="recGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    <!-- AI Energy / Sparkle Gradient -->
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#c084fc" />
+    </linearGradient>
+
+    <!-- Summary Chart / Result Gradient -->
+    <linearGradient id="chartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Icon Card -->
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" />
+  <rect width="64" height="64" rx="16" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" />
+
+  <!-- 1. Left Side: The Raw Receipt -->
+  <g transform="translate(10, 12)">
+    <!-- Receipt Body with Jagged Bottom -->
+    <path d="M0 2C0 0.895 0.895 0 2 0H18C19.105 0 20 0.895 20 2V36L16.6 34L13.3 36L10 34L6.6 36L3.3 34L0 36V2Z" fill="url(#recGrad)" />
+    <!-- Receipt Lines -->
+    <rect x="4" y="5" width="8" height="2" rx="1" fill="#94a3b8" />
+    <rect x="4" y="10" width="12" height="1.8" rx="0.9" fill="#cbd5e1" />
+    <rect x="4" y="14" width="10" height="1.8" rx="0.9" fill="#cbd5e1" />
+    <rect x="4" y="18" width="12" height="1.8" rx="0.9" fill="#cbd5e1" />
+    <!-- Receipt Total Line (highlighted) -->
+    <rect x="4" y="24" width="6" height="2.2" rx="1" fill="#475569" />
+    <rect x="12" y="24" width="4" height="2.2" rx="1" fill="#3b82f6" />
+  </g>
+
+  <!-- 2. Center: Dramatic AI Transformation Wave / Arrows -->
+  <path d="M28 26C31 23 33 23 36 26L35 23M36 26L33 27" stroke="url(#aiGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+  <path d="M28 34C31 37 33 37 36 34L33 33M36 34L35 37" stroke="url(#aiGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+
+  <!-- AI Magic Sparkles -->
+  <path d="M33 13L34.2 16.8L38 18L34.2 19.2L33 23L31.8 19.2L28 18L31.8 16.8Z" fill="#fbbf24" filter="url(#glow)" />
+  <circle cx="28" cy="12" r="1.2" fill="#38bdf8" />
+  <circle cx="38" cy="27" r="1" fill="#c084fc" />
+
+  <!-- 3. Right Side: The Structured AI Expense Summary -->
+  <g transform="translate(34, 16)">
+    <!-- Summary Card Panel -->
+    <rect width="20" height="30" rx="3.5" fill="#0f172a" stroke="url(#aiGrad)" stroke-width="1.5" />
+    
+    <!-- Verified Badge Check -->
+    <circle cx="10" cy="7" r="3.5" fill="url(#chartGrad)" />
+    <path d="M8.5 7L9.5 8L11.5 6" stroke="#ffffff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Analytical Summary Bars (Spending distribution) -->
+    <rect x="3.5" y="14" width="5" height="11" rx="1" fill="#38bdf8" />
+    <rect x="10" y="18" width="5" height="7" rx="1" fill="#818cf8" />
+    <rect x="16.5" y="11" width="5" height="14" rx="1" fill="url(#chartGrad)" />
+  </g>
+</svg>

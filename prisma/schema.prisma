@@ -1,0 +1,112 @@
+// VoucherSense AI — Prisma schema. Locked by AGENTS.md §2 and PRD §2.
+// Six models exactly as specified. Do not rename fields, add unrelated
+// tables, or change these enums without flagging it.
+//
+// NOTE (auth redesign): the User model carries two additional auth fields
+// (email, passwordHash) per the explicit product decision to add account
+// sign-in/registration. They are nullable so pre-existing demo rows stay
+// valid; the seed creates the demo user without credentials (no sign-in).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  email        String?   @unique // auth: login identifier; null for legacy rows
+  passwordHash String? // auth: scrypt hash; null for legacy rows
+  receipts     Receipt[]
+
+  // Auth fields above were added for the account sign-in/registation redesign.
+  // Passwords are never stored in plain text — see lib/auth/passwords.ts.
+}
+
+model Receipt {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  storageKey       String // e.g. "receipts/2026/09/clx9f...jpg" — never the binary
+  originalFilename String
+  mimeType         String
+  sizeBytes        Int
+batchId       String? // groups files submitted together in one batch upload request
+  uploadedAt    DateTime @default(now())
+  job           Job?
+}
+
+enum JobStatus {
+  pending
+  processing
+  done
+  failed
+}
+
+model Job {
+  id           String    @id @default(cuid())
+  receiptId    String    @unique
+  receipt      Receipt   @relation(fields: [receiptId], references: [id])
+  status       JobStatus @default(pending)
+  attemptCount Int       @default(0)
+  errorMessage String?
+  claimedBy    String? // worker instance id
+  claimedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  attempts          JobAttempt[]
+  extractionResult  ExtractionResult?
+
+  @@index([status, createdAt]) // supports FIFO claiming and the staleness reaper scan
+}
+
+model JobAttempt {
+  id               String   @id @default(cuid())
+  jobId            String
+  job              Job      @relation(fields: [jobId], references: [id])
+  attemptNumber    Int
+  rawResponse      String   @db.Text
+  validationError  String?  @db.Text // null if this attempt passed validation
+  outcome          String // "valid" | "invalid_schema" | "truncated" | "timeout" | "provider_error"
+  createdAt        DateTime @default(now())
+
+  @@index([jobId])
+}
+
+model ExtractionResult {
+  id             String   @id @default(cuid())
+  jobId          String   @unique
+  job            Job      @relation(fields: [jobId], references: [id])
+  merchant       String?
+  purchaseDate   String? // stored as returned (YYYY-MM-DD) or null
+  currency       String?
+  total          Float?
+  paymentMethod  String // enum value, validated at app level
+  category       String // enum value, validated at app level
+  items          Json // array of { name, quantity, unit_price, line_total }, max 40 entries
+  confidenceNote String?
+  createdAt      DateTime @default(now())
+
+  summary Summary?
+}
+
+model Summary {
+  id                 String           @id @default(cuid())
+  extractionResultId String           @unique
+  extractionResult   ExtractionResult @relation(fields: [extractionResultId], references: [id])
+  status             String           @default("pending") // pending | done | failed — see §7.2
+  attemptCount       Int              @default(0)
+  errorMessage       String?
+  summaryText        String?
+  totalSpent         Float?
+  currency           String?
+  category           String?
+  largestItem        String?
+  itemCount          Int?
+  createdAt          DateTime         @default(now())
+}
